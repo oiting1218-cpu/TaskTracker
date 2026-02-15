@@ -1,8 +1,12 @@
+using TaskTracker.Api.Data;
+using Microsoft.EntityFrameworkCore;
+
 //Create application builder
 var builder = WebApplication.CreateBuilder(args);
 
 //Register services in DI container
 builder.Services.AddControllers();
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Build application
 var app = builder.Build();
