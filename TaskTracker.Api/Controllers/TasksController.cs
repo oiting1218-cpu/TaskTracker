@@ -29,5 +29,13 @@ namespace TaskTracker.Api.Controllers
             await _context.SaveChangesAsync();
             return Ok(task);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTasks() 
+        {
+            var tasks = await _context.TaskItems.ToListAsync();
+            return Ok(tasks);
+        }
+
     }
 }
