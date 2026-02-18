@@ -37,5 +37,37 @@ namespace TaskTracker.Api.Controllers
             return Ok(tasks);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTask(int id, UpdateTaskDTO dto)
+        {
+            var task = await _context.TaskItems.FindAsync(id);
+            
+            if (task == null)
+                return NotFound();
+            
+            task.Title = dto.Title;
+            task.Status = dto.Status;
+
+            if (dto.Description != null) 
+                task.Description = dto.Description;            
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTask(int id)
+        {
+            var task = await _context.TaskItems.FindAsync(id);
+            
+            if(task == null)
+                return NotFound();
+            
+            _context.TaskItems.Remove(task);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

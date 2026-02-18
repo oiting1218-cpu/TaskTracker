@@ -2,7 +2,7 @@
 
 namespace TaskTracker.Api.DTOs
 {
-    public class CreateTaskDto
+    public class UpdateTaskDTO
     {
         [Required]
         public string Title { get; set; } = string.Empty;
