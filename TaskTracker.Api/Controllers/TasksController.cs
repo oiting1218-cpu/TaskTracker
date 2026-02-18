@@ -37,6 +37,13 @@ namespace TaskTracker.Api.Controllers
             return Ok(tasks);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTaskById(int id)
+        {
+            var task = await _context.TaskItems.FindAsync(id);
+            return Ok(task);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTask(int id, UpdateTaskDTO dto)
         {
