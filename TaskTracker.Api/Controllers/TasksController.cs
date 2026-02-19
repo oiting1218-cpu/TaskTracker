@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskTracker.Api.Data;
 using TaskTracker.Api.Models;
 using TaskTracker.Api.DTOs;
+using TaskTracker.Api.Services;
 
 namespace TaskTracker.Api.Controllers
 {
@@ -10,71 +11,53 @@ namespace TaskTracker.Api.Controllers
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public TasksController(ApplicationDbContext context) 
+        private readonly ITaskService _taskService;
+        public TasksController(ITaskService taskService) 
         {
-            _context = context;
+            _taskService = taskService;
         }
                 
         [HttpPost]
         public async Task<IActionResult> AddTask(CreateTaskDto dto)
         {
-            var task = new TaskItem { 
-                Title = dto.Title,
-                Description = dto.Description,
-                Status = dto.Status,
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.TaskItems.Add(task);
-            await _context.SaveChangesAsync();
+            var task = await _taskService.AddTaskAsync(dto);
             return Ok(task);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetTasks() 
         {
-            var tasks = await _context.TaskItems.ToListAsync();
+            var tasks = await _taskService.GetTasksAsync();
             return Ok(tasks);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskById(int id)
         {
-            var task = await _context.TaskItems.FindAsync(id);
+            var task = await _taskService.GetTaskByIdAsync(id);
             return Ok(task);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTask(int id, UpdateTaskDTO dto)
         {
-            var task = await _context.TaskItems.FindAsync(id);
+            var updated = await _taskService.UpdateTaskAsync(id, dto);
             
-            if (task == null)
+            if (!updated)
                 return NotFound();
-            
-            task.Title = dto.Title;
-            task.Status = dto.Status;
-
-            if (dto.Description != null) 
-                task.Description = dto.Description;            
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            else
+                return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask(int id)
         {
-            var task = await _context.TaskItems.FindAsync(id);
+            var deleted = await _taskService.DeleteTaskAsync(id);
             
-            if(task == null)
+            if(!deleted)
                 return NotFound();
-            
-            _context.TaskItems.Remove(task);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            else
+                return NoContent();
         }
     }
 }

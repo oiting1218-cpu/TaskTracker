@@ -1,5 +1,6 @@
 using TaskTracker.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using TaskTracker.Api.Services;
 
 //Create application builder
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 //Build application
 var app = builder.Build();
