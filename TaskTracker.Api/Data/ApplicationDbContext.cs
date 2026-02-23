@@ -8,5 +8,7 @@ namespace TaskTracker.Api.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options) { }
 
         public DbSet<TaskItem> TaskItems { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }
