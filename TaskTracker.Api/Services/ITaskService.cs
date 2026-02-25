@@ -8,7 +8,7 @@ namespace TaskTracker.Api.Services
         Task<IEnumerable<TaskItem>> GetTasksAsync();
 
         Task<TaskItem?> GetTaskByIdAsync(int id);
-        
+
         Task<TaskItem> AddTaskAsync(CreateTaskDto dto);
 
         Task<bool> UpdateTaskAsync(int id, UpdateTaskDTO dto);

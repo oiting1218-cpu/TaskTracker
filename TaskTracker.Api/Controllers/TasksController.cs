@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskTracker.Api.Data;
-using TaskTracker.Api.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskTracker.Api.DTOs;
 using TaskTracker.Api.Services;
 
 namespace TaskTracker.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
     {
         private readonly ITaskService _taskService;
-        public TasksController(ITaskService taskService) 
+        public TasksController(ITaskService taskService)
         {
             _taskService = taskService;
         }
-                
+
         [HttpPost]
         public async Task<IActionResult> AddTask(CreateTaskDto dto)
         {
@@ -25,7 +24,7 @@ namespace TaskTracker.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTasks() 
+        public async Task<IActionResult> GetTasks()
         {
             var tasks = await _taskService.GetTasksAsync();
             return Ok(tasks);
@@ -42,7 +41,7 @@ namespace TaskTracker.Api.Controllers
         public async Task<IActionResult> UpdateTask(int id, UpdateTaskDTO dto)
         {
             var updated = await _taskService.UpdateTaskAsync(id, dto);
-            
+
             if (!updated)
                 return NotFound();
             else
@@ -53,8 +52,8 @@ namespace TaskTracker.Api.Controllers
         public async Task<IActionResult> DeleteTask(int id)
         {
             var deleted = await _taskService.DeleteTaskAsync(id);
-            
-            if(!deleted)
+
+            if (!deleted)
                 return NotFound();
             else
                 return NoContent();

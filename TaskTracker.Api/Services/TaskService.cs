@@ -5,11 +5,11 @@ using TaskTracker.Api.Models;
 
 namespace TaskTracker.Api.Services
 {
-    public class TaskService: ITaskService
+    public class TaskService : ITaskService
     {
         private readonly ApplicationDbContext _context;
-        public TaskService(ApplicationDbContext context) 
-        { 
+        public TaskService(ApplicationDbContext context)
+        {
             _context = context;
         }
 
@@ -20,12 +20,13 @@ namespace TaskTracker.Api.Services
 
         public async Task<TaskItem?> GetTaskByIdAsync(int id)
         {
-            return await _context.TaskItems.FindAsync(id);          
+            return await _context.TaskItems.FindAsync(id);
         }
 
         public async Task<TaskItem> AddTaskAsync(CreateTaskDto dto)
         {
-            var task = new TaskItem {
+            var task = new TaskItem
+            {
                 Title = dto.Title,
                 Description = dto.Description,
                 Status = dto.Status,
@@ -39,13 +40,13 @@ namespace TaskTracker.Api.Services
         public async Task<bool> UpdateTaskAsync(int id, UpdateTaskDTO dto)
         {
             var task = await _context.TaskItems.FindAsync(id);
-            
+
             if (task == null)
                 return false;
 
-            task.Title = dto.Title;            
+            task.Title = dto.Title;
             task.Status = dto.Status;
-            if(dto.Description != null)
+            if (dto.Description != null)
                 task.Description = dto.Description;
 
             await _context.SaveChangesAsync();
@@ -55,8 +56,8 @@ namespace TaskTracker.Api.Services
         public async Task<bool> DeleteTaskAsync(int id)
         {
             var task = await _context.TaskItems.FindAsync(id);
-            
-            if (task == null) 
+
+            if (task == null)
                 return false;
 
             _context.TaskItems.Remove(task);
