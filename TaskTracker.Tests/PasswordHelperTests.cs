@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskTracker.Api.Helpers;
+﻿using TaskTracker.Api.Helpers;
 
 namespace TaskTracker.Tests
 {
     public class PasswordHelperTests
     {
-        [Fact]
-        public void IsPasswordStrong_ShouldReturnTrue_WhenPasswordLengthIsAtLeast6()
+        [Theory]
+        [InlineData("abcdef")]
+        [InlineData("a1b2c3d4")]
+        [InlineData("123456")]
+        public void IsPasswordStrong_ShouldReturnTrue_WhenPasswordLengthIsAtLeast6(string password)
         {
             //Arrange
             var helper = new PasswordHelper();
-            string password = "abcdef";
 
             //Act
             var result = helper.IsPasswordStrong(password);
@@ -23,12 +20,14 @@ namespace TaskTracker.Tests
             Assert.True(result);
         }
 
-        [Fact]
-        public void IsPasswordStrong_ShoudlReturnFalse_WhenPasswordLengthIsShort()
+        [Theory]
+        [InlineData("abc")]
+        [InlineData("")]
+        [InlineData("123")]
+        public void IsPasswordStrong_ShoudlReturnFalse_WhenPasswordLengthIsShort(string password)
         {
             //Arrange
             var helper = new PasswordHelper();
-            var password = "abc";
 
             //Act
             var result = helper.IsPasswordStrong(password);
@@ -37,12 +36,14 @@ namespace TaskTracker.Tests
             Assert.False(result);
         }
 
-        [Fact]
-        public void IsPasswordContainsAtLeastOneDigit_ShouldReturnTrue_WhenContainsDigit()
+        [Theory]
+        [InlineData("a2b")]
+        [InlineData("1")]
+        [InlineData("123")]
+        public void IsPasswordContainsAtLeastOneDigit_ShouldReturnTrue_WhenContainsDigit(string password)
         {
             //Arrange
             var helper = new PasswordHelper();
-            var password = "a2b";
 
             //Act
             var result = helper.IsPasswordContainsAtLeastOneDigit(password);
@@ -51,12 +52,13 @@ namespace TaskTracker.Tests
             Assert.True(result);
         }
 
-        [Fact]
-        public void IsPasswordContainsAtLeastOneDigit_ShouldReturnFalse_WhenNoDigit()
+        [Theory]
+        [InlineData("abc")]
+        [InlineData("")]
+        public void IsPasswordContainsAtLeastOneDigit_ShouldReturnFalse_WhenNoDigit(string password)
         {
             //Arrange
             var helper = new PasswordHelper();
-            var password = "abc";
 
             //Act
             var result = helper.IsPasswordContainsAtLeastOneDigit(password);
