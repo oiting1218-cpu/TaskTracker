@@ -23,7 +23,7 @@ namespace TaskTracker.Api.Services
             };
 
             //Create secret key - private signature
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]!));
 
             //Create signing credential
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
