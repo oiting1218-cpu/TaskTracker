@@ -1,26 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskTracker.Api.Data;
 using TaskTracker.Api.DTOs;
 using TaskTracker.Api.Models;
+using TaskTracker.Api.Repositories;
 
 namespace TaskTracker.Api.Services
 {
     public class TaskService : ITaskService
     {
-        private readonly ApplicationDbContext _context;
-        public TaskService(ApplicationDbContext context)
+        private readonly ITaskItemsRepository _taskRepository;
+        public TaskService(ITaskItemsRepository taskRepository)
         {
-            _context = context;
+            _taskRepository = taskRepository;
         }
 
         public async Task<IEnumerable<TaskItem>> GetTasksAsync()
         {
-            return await _context.TaskItems.ToListAsync();
+            return await _taskRepository.GetTaskItems();
         }
 
         public async Task<TaskItem?> GetTaskByIdAsync(int id)
         {
-            return await _context.TaskItems.FindAsync(id);
+            return await _taskRepository.GetTaskItemById(id);
         }
 
         public async Task<TaskItem> AddTaskAsync(CreateTaskDto dto)
@@ -32,36 +32,30 @@ namespace TaskTracker.Api.Services
                 Status = dto.Status,
                 CreatedAt = DateTime.UtcNow
             };
-            _context.TaskItems.Add(task);
-            await _context.SaveChangesAsync();
+            await _taskRepository.AddTaskItem(task);
             return task;
         }
 
         public async Task<bool> UpdateTaskAsync(int id, UpdateTaskDTO dto)
         {
-            var task = await _context.TaskItems.FindAsync(id);
+            var task = await _taskRepository.GetTaskItemById(id);
 
             if (task == null)
                 return false;
 
-            task.Title = dto.Title;
-            task.Status = dto.Status;
-            if (dto.Description != null)
-                task.Description = dto.Description;
+            await _taskRepository.UpdateTaskItem(task, dto);
 
-            await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> DeleteTaskAsync(int id)
         {
-            var task = await _context.TaskItems.FindAsync(id);
+            var task = await _taskRepository.GetTaskItemById(id);
 
             if (task == null)
                 return false;
 
-            _context.TaskItems.Remove(task);
-            await _context.SaveChangesAsync();
+            await _taskRepository.DeleteTaskItem(task);
             return true;
         }
     }

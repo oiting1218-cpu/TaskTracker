@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using TaskTracker.Api.Data;
 using TaskTracker.Api.Middleware;
+using TaskTracker.Api.Repositories;
 using TaskTracker.Api.Services;
 
 //Create application builder
@@ -76,6 +77,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITaskItemsRepository, TaskItemsRepository>();
 
 //Build application
 var app = builder.Build();
